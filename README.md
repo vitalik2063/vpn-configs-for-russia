@@ -61,15 +61,15 @@ VPN-конфигурации на вашем устройстве удобнее
 
 > **Протестировано на кабельном провайдере**:
 
-Vless+Reality [Vless-Reality-Black-Lists-Rus-Cable.txt](https://raw.githubusercontent.com/GoldCaviar/vpn-configs-for-russia/dff984b87903c07ffeaaa08916bd6e980d4b1564/Vless-Reality-Black-Lists-Rus-Cable.txt)
+Vless+Reality [Vless-Reality-Black-Lists-Rus-Cable.txt](https://raw.githubusercontent.com/GoldCaviar/vpn-configs-for-russia/refs/heads/main/Vless-Reality-Black-Lists-Rus-Cable.txt)
 
-Shadowsocks/Hysteria2 [Shadowsocks-Hysteria2-Black-Lists-Rus-Cable.txt](https://raw.githubusercontent.com/GoldCaviar/vpn-configs-for-russia/dff984b87903c07ffeaaa08916bd6e980d4b1564/Shadowsocks-Hysteria2-Black-Lists-Rus-Cable.txt)
+Shadowsocks/Hysteria2 [Shadowsocks-Hysteria2-Black-Lists-Rus-Cable.txt](https://raw.githubusercontent.com/GoldCaviar/vpn-configs-for-russia/refs/heads/main/Shadowsocks-Hysteria2-Black-Lists-Rus-Cable.txt)
 
 > **Протестировано на  мобильном операторе** :
 
-Vless+Reality [Vless-Reality-Black-Lists-Rus-Mobile.txt](https://raw.githubusercontent.com/GoldCaviar/vpn-configs-for-russia/dff984b87903c07ffeaaa08916bd6e980d4b1564/Vless-Reality-Black-Lists-Rus-Mobile.txt)
+Vless+Reality [Vless-Reality-Black-Lists-Rus-Mobile.txt](https://raw.githubusercontent.com/GoldCaviar/vpn-configs-for-russia/refs/heads/main/Vless-Reality-Black-Lists-Rus-Mobile.txt)
 
-Shadowsocks/Hysteria2 [Shadowsocks-Hysteria2-Black-Lists-Rus-Mobile.txt](https://raw.githubusercontent.com/GoldCaviar/vpn-configs-for-russia/dff984b87903c07ffeaaa08916bd6e980d4b1564/Shadowsocks-Hysteria2-Black-Lists-Rus-Mobile.txt)
+Shadowsocks/Hysteria2 [Shadowsocks-Hysteria2-Black-Lists-Rus-Mobile.txt](https://raw.githubusercontent.com/GoldCaviar/vpn-configs-for-russia/refs/heads/main/Shadowsocks-Hysteria2-Black-Lists-Rus-Mobile.txt)
 </details>
 
 <details>
@@ -77,11 +77,11 @@ Shadowsocks/Hysteria2 [Shadowsocks-Hysteria2-Black-Lists-Rus-Mobile.txt](https:/
 <summary>📋 Белый список ⚪</summary>
 .
 
-> **Протестировано на кабельном провайдере**:  [Vless-Reality-White-Lists-Rus-Cable.txt](https://raw.githubusercontent.com/GoldCaviar/vpn-configs-for-russia/dff984b87903c07ffeaaa08916bd6e980d4b1564/Vless-Reality-White-Lists-Rus-Cable.txt)
+> **Протестировано на кабельном провайдере**:  [Vless-Reality-White-Lists-Rus-Cable.txt](https://raw.githubusercontent.com/GoldCaviar/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Cable.txt)
 
-> **Протестировано на мобильном операторе** :  [Vless-Reality-White-Lists-Rus-Mobile.txt](https://raw.githubusercontent.com/GoldCaviar/vpn-configs-for-russia/dff984b87903c07ffeaaa08916bd6e980d4b1564/Vless-Reality-White-Lists-Rus-Mobile.txt)
+> **Протестировано на мобильном операторе** :  [Vless-Reality-White-Lists-Rus-Mobile.txt](https://raw.githubusercontent.com/GoldCaviar/vpn-configs-for-russia/refs/heads/main/Vless-Reality-White-Lists-Rus-Mobile.txt)
 
-> **Полный список (даже с конфигурациями, не прошедшими проверку)**:  [White_Lists_Full_Rus.txt](https://raw.githubusercontent.com/GoldCaviar/vpn-configs-for-russia/dff984b87903c07ffeaaa08916bd6e980d4b1564/White_Lists_Full_Rus.txt)
+> **Полный список (даже с конфигурациями, не прошедшими проверку)**:  [White_Lists_Full_Rus.txt](https://github.com/GoldCaviar/vpn-configs-for-russia/blob/main/White_Lists_Full_Rus.txt)
 </details>
 
 ## Приложения на ПК и телефоне: 
