@@ -4,7 +4,7 @@
 <img src="https://komarev.com/ghpvc/?username=igareck&label=Visitors&color=0e75b6&style=flat" alt="Visitor Count" /> 
 [![issues](https://custom-icon-badges.demolab.com/github/issues-raw/igareck/vpn-configs-for-russia?logo=issue&color=0e75b6&style=flat)](https://github.com/igareck/vpn-configs-for-russia/issues "issues")
 [![last commit][1]][1]
-[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=102&color=0e75b6&style=flat)](https://github.com/ellerbrock/open-source-badge/)
+![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.png?v=103)
 
 [1]: https://custom-icon-badges.demolab.com/github/last-commit/igareck/vpn-configs-for-russia?logo=history&logoColor=white&color=0e75b6&style=flat
 
