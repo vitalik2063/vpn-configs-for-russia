@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://raw.githubusercontent.com/igareck/GoldCaviar/refs/heads/main/Files/vpn-configs-for-russia-2.svg" alt="vpn-configs-for-russia" />
+  <img src="https://raw.githubusercontent.com/igareck/GoldCaviar/refs/heads/main/Files/vpn-configs-for-russia-3.svg" alt="vpn-configs-for-russia" />
 </h1>
 
 # <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNTljeGk4d3lzZnU3Mm1peDBienFpbmEyb3JmaDB5N21tMW9oczIwdyZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/8p1WPEOeDWFCksfe18/giphy.gif" width="45">  Бесплатные VPN-конфигурации, работающие в РФ 
