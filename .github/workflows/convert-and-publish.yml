@@ -26,16 +26,17 @@ jobs:
 
       - name: Wait for subconverter to be ready
         run: |
-          for i in $(seq 1 20); do
-            if curl -sS http://127.0.0.1:25500/health >/dev/null 2>&1; then
+          for i in $(seq 1 40); do
+            echo "Attempt $i: checking /health..."
+            if curl -sS --max-time 5 http://127.0.0.1:25500/health >/dev/null 2>&1; then
               echo "subconverter ready"
               break
             fi
-            echo "waiting for subconverter..."
             sleep 3
           done
+          curl -v --max-time 5 http://127.0.0.1:25500/health || true
 
-            - name: Fetch generated clash yaml with diagnostics
+      - name: Fetch generated clash yaml with diagnostics
         run: |
           mkdir -p generated
           echo "=== curl /health (verbose) ==="
@@ -59,17 +60,14 @@ jobs:
           fi
 
       - name: Stop subconverter container
+        if: always()
         run: docker rm -f subconverter_job || true
 
       - name: Commit and push generated file
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add generated/clash.yaml
+          git add generated/clash.yaml || true
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update generated clash.yaml from remote txt"
-            git push
-          fi
-        
