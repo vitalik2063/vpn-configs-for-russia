@@ -1,55 +1,61 @@
-name: Convert subscription to Clash provider
+name: Generate Clash YAML from remote txt
+
 on:
   schedule:
     - cron: '*/15 * * * *'
   workflow_dispatch: {}
 
-permissions:
-  contents: write
-
 jobs:
-  convert:
+  build-and-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
-      - name: Fetch remote TXT subscription
+      - name: Start subconverter container
         run: |
-          SUB_URL="https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/BLACK_VLESS_RUS_mobile.txt"
-          curl -fsSL -o sub.txt "$SUB_URL"
-          echo "Downloaded $(wc -c < sub.txt) bytes"
+          docker run --rm -d \
+            --name subconverter_job \
+            -v "${{ github.workspace }}:/work" \
+            -w /work \
+            -p 25500:25500 \
+            tindy2013/subconverter:latest
 
-      - name: Try base64 decode if needed
+      - name: Wait for subconverter to be ready
         run: |
-          if grep -qiE '^(vmess|vless|ss|trojan)' sub.txt; then
-            echo "Plain links detected — no decode"
-            cp sub.txt sub_clean.txt
-          else
-            echo "Attempting base64 decode"
-            base64 -d sub.txt > sub_decoded.txt || true
-            if grep -qiE '^(vmess|vless|ss|trojan)' sub_decoded.txt; then
-              mv sub_decoded.txt sub_clean.txt
-              echo "Decoded base64 to sub_clean.txt"
-            else
-              echo "Decode failed or not needed — using original"
-              cp sub.txt sub_clean.txt
+          for i in $(seq 1 20); do
+            if curl -sS http://127.0.0.1:25500/health >/dev/null 2>&1; then
+              echo "subconverter ready"
+              break
             fi
-          fi
-          wc -l sub_clean.txt || true
+            echo "waiting for subconverter..."
+            sleep 3
+          done
 
-      - name: Run subconverter to produce Clash provider
+      - name: Fetch generated clash yaml
         run: |
-          docker run --rm -v $PWD:/work -w /work tindy2013/subconverter:latest \
-            -i sub_clean.txt -o clash -f provider.yaml || (echo "subconverter failed" && exit 1)
-          echo "provider.yaml generated, size: $(wc -c < provider.yaml) bytes"
+          mkdir -p generated
+          curl -sS "http://127.0.0.1:25500/sub?target=clash&config=convert-sub.yml" -o generated/clash.yaml
+          if [ ! -s generated/clash.yaml ]; then
+            echo "Generated file is empty"
+            docker logs subconverter_job || true
+            docker rm -f subconverter_job || true
+            exit 1
+          fi
 
-      - name: Commit provider.yaml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Stop subconverter container
+        run: docker rm -f subconverter_job || true
+
+      - name: Commit and push generated file
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add provider.yaml || true
-          git commit -m "Auto update provider $(date -u +'%Y-%m-%dT%H:%M:%SZ')" || echo "No changes to commit"
-          git push origin HEAD:$(git rev-parse --abbrev-ref HEAD)
+          git add generated/clash.yaml
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update generated clash.yaml from remote txt"
+            git push
+          fi
