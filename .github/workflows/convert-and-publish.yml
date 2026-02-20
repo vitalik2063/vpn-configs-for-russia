@@ -14,7 +14,7 @@ jobs:
         with:
           persist-credentials: true
 
-      - name: Start subconverter container
+            - name: Start subconverter container (debug)
         run: |
           docker run --rm -d \
             --name subconverter_job \
@@ -22,21 +22,10 @@ jobs:
             -w /work \
             -p 25500:25500 \
             --entrypoint "" \
-            tindy2013/subconverter:latest
+            tindy2013/subconverter:latest \
+            sh -c "echo '=== /work listing ==='; ls -la /work || true; echo '=== convert-sub.yml ==='; cat /work/convert-sub.yml || true; echo '=== ps aux inside container ==='; ps aux || true; echo 'sleeping to keep container alive'; sleep 120"
 
-      - name: Wait for subconverter to be ready
-        run: |
-          for i in $(seq 1 40); do
-            echo "Attempt $i: checking /health..."
-            if curl -sS --max-time 5 http://127.0.0.1:25500/health >/dev/null 2>&1; then
-              echo "subconverter ready"
-              break
-            fi
-            sleep 3
-          done
-          curl -v --max-time 5 http://127.0.0.1:25500/health || true
-
-      - name: Fetch generated clash yaml with diagnostics
+      - name: Fetch generated clash yaml (debug)
         run: |
           mkdir -p generated
           echo "=== curl /health (verbose) ==="
@@ -54,7 +43,7 @@ jobs:
             echo "=== docker logs subconverter_job (last 500 lines) ==="
             docker logs --tail 500 subconverter_job || true
             echo "=== end docker diagnostics ==="
-            sleep 30
+            sleep 10
             docker rm -f subconverter_job || true
             exit 1
           fi
