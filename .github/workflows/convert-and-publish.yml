@@ -35,13 +35,25 @@ jobs:
             sleep 3
           done
 
-      - name: Fetch generated clash yaml
+            - name: Fetch generated clash yaml with diagnostics
         run: |
           mkdir -p generated
-          curl -sS "http://127.0.0.1:25500/sub?target=clash&config=convert-sub.yml" -o generated/clash.yaml
+          echo "=== curl /health (verbose) ==="
+          curl -v --max-time 10 http://127.0.0.1:25500/health || true
+          echo "=== curl /sub (verbose) ==="
+          curl -v --max-time 20 "http://127.0.0.1:25500/sub?target=clash&config=convert-sub.yml" -o generated/clash.yaml || true
+          echo "=== generated file info ==="
+          ls -l generated/clash.yaml || true
           if [ ! -s generated/clash.yaml ]; then
-            echo "Generated file is empty"
-            docker logs subconverter_job || true
+            echo "generated/clash.yaml is empty — collecting docker diagnostics"
+            echo "=== docker ps -a ==="
+            docker ps -a || true
+            echo "=== docker inspect subconverter_job ==="
+            docker inspect subconverter_job || true
+            echo "=== docker logs subconverter_job (last 500 lines) ==="
+            docker logs --tail 500 subconverter_job || true
+            echo "=== end docker diagnostics ==="
+            sleep 30
             docker rm -f subconverter_job || true
             exit 1
           fi
