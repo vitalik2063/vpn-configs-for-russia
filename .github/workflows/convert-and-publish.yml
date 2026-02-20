@@ -1,0 +1,61 @@
+name: Generate Clash YAML from remote txt
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch: {}
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Start subconverter container
+        run: |
+          docker run --rm -d \
+            --name subconverter_job \
+            -v "${{ github.workspace }}:/work" \
+            -w /work \
+            -p 25500:25500 \
+            tindy2013/subconverter:latest
+
+      - name: Wait for subconverter to be ready
+        run: |
+          for i in $(seq 1 20); do
+            if curl -sS http://127.0.0.1:25500/health >/dev/null 2>&1; then
+              echo "subconverter ready"
+              break
+            fi
+            echo "waiting for subconverter..."
+            sleep 3
+          done
+
+      - name: Fetch generated clash yaml
+        run: |
+          mkdir -p generated
+          curl -sS "http://127.0.0.1:25500/sub?target=clash&config=convert-sub.yml" -o generated/clash.yaml
+          if [ ! -s generated/clash.yaml ]; then
+            echo "Generated file is empty"
+            docker logs subconverter_job || true
+            docker rm -f subconverter_job || true
+            exit 1
+          fi
+
+      - name: Stop subconverter container
+        run: docker rm -f subconverter_job || true
+
+      - name: Commit and push generated file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add generated/clash.yaml
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update generated clash.yaml from remote txt"
+            git push
+          fi
