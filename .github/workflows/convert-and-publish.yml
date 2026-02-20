@@ -27,33 +27,45 @@ jobs:
       - name: Wait for subconverter to be ready
         run: |
           for i in $(seq 1 20); do
-            if curl -sS http://127.0.0.1:25500/health >/dev/null 2>&1; then
+            echo "Attempt $i: checking /health..."
+            if curl -sS --max-time 5 http://127.0.0.1:25500/health >/dev/null 2>&1; then
               echo "subconverter ready"
               break
             fi
-            echo "waiting for subconverter..."
             sleep 3
           done
+          # final check
+          curl -sS --max-time 5 http://127.0.0.1:25500/health || true
 
-      - name: Fetch generated clash yaml
+      - name: Fetch generated clash yaml with diagnostics
         run: |
           mkdir -p generated
-          curl -sS "http://127.0.0.1:25500/sub?target=clash&config=convert-sub.yml" -o generated/clash.yaml
+          echo "Trying to curl /sub (verbose)..."
+          curl -v --max-time 15 "http://127.0.0.1:25500/sub?target=clash&config=convert-sub.yml" -o generated/clash.yaml || true
+          echo "Saved generated/clash.yaml (size):"
+          ls -l generated/clash.yaml || true
           if [ ! -s generated/clash.yaml ]; then
-            echo "Generated file is empty"
+            echo "generated/clash.yaml is empty — collecting docker diagnostics"
+            echo "=== docker ps -a ==="
+            docker ps -a || true
+            echo "=== docker inspect subconverter_job ==="
+            docker inspect subconverter_job || true
+            echo "=== docker logs subconverter_job ==="
             docker logs subconverter_job || true
+            echo "=== end docker diagnostics ==="
             docker rm -f subconverter_job || true
             exit 1
           fi
 
       - name: Stop subconverter container
+        if: always()
         run: docker rm -f subconverter_job || true
 
       - name: Commit and push generated file
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add generated/clash.yaml
+          git add generated/clash.yaml || true
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
